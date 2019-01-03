@@ -1,7 +1,7 @@
 # Copyright 2010, Olivier Stasse, JRL, CNRS/AIST
 #
 # This file is part of dynamic-graph.
-# dynamic-graph is free software: 
+# dynamic-graph is free software:
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
@@ -26,18 +26,13 @@
 ####################################
 ### Main Library
 ####################################
-SET(LIBRARY_NAME ${PROJECT_NAME})
 
 # Verbosity level
-IF (NOT (\"${CMAKE_VERBOSITY_LEVEL}\" STREQUAL \"\"))
-  ADD_DEFINITIONS(-DVP_DEBUG_MODE=${CMAKE_VERBOSITY_LEVEL} -DVP_DEBUG)
-ENDIF (NOT (\"${CMAKE_VERBOSITY_LEVEL}\" STREQUAL \"\"))
+#IF (NOT (\"${CMAKE_VERBOSITY_LEVEL}\" STREQUAL \"\"))
+  #ADD_DEFINITIONS(-DVP_DEBUG_MODE=${CMAKE_VERBOSITY_LEVEL} -DVP_DEBUG)
+#ENDIF (NOT (\"${CMAKE_VERBOSITY_LEVEL}\" STREQUAL \"\"))
 
-# Declare boost include directories
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
-ADD_LIBRARY(${LIBRARY_NAME}
+ADD_LIBRARY(${PROJECT_NAME}
   SHARED
   debug/debug.cpp
   debug/real-time-logger.cpp
@@ -59,44 +54,44 @@ ADD_LIBRARY(${LIBRARY_NAME}
   command/command.cpp
   )
 
-SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION})
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION})
 
 
 IF (UNIX)
-  TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${CMAKE_DL_LIBS} pthread)
+  TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_DL_LIBS} pthread)
 ENDIF (UNIX)
 
-TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 #IF (UNIX AND NOT APPLE)
-#  TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${JRL_MAL_LDFLAGS_OTHER})
+#  TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${JRL_MAL_LDFLAGS_OTHER})
 #ENDIF (UNIX AND NOT APPLE)
 
-INSTALL(TARGETS ${LIBRARY_NAME}
+INSTALL(TARGETS ${PROJECT_NAME}
   DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 ####################################
 ### Plugins
 ####################################
-SET(plugins_list
-	traces/tracer
-	traces/tracer-real-time
-)
+#SET(plugins_list
+	#traces/tracer
+	#traces/tracer-real-time
+#)
 
-SET(tracer-real-time_dependency tracer)
+#SET(tracer-real-time_dependency tracer)
 
-FOREACH(plugin_file ${plugins_list})
-  GET_FILENAME_COMPONENT(plugin ${plugin_file} NAME)
-  ADD_LIBRARY(${plugin} SHARED "${plugin_file}.cpp")
+#FOREACH(plugin_file ${plugins_list})
+  #GET_FILENAME_COMPONENT(plugin ${plugin_file} NAME)
+  #ADD_LIBRARY(${plugin} SHARED "${plugin_file}.cpp")
 
-  TARGET_LINK_LIBRARIES(${plugin}
-    ${PROJECT_NAME} ${${plugin}_dependency}
-    ${Boost_LIBRARIES})
+  #TARGET_LINK_LIBRARIES(${plugin}
+    #${PROJECT_NAME} ${${plugin}_dependency}
+    #${Boost_LIBRARIES})
 
-  SET_TARGET_PROPERTIES(${plugin}
-    PROPERTIES
-    PREFIX ""
-    )
+  #SET_TARGET_PROPERTIES(${plugin}
+    #PROPERTIES
+    #PREFIX ""
+    #)
 
-  INSTALL(TARGETS ${plugin} DESTINATION ${PLUGINDIR})
-ENDFOREACH(plugin_file)
+  #INSTALL(TARGETS ${plugin} DESTINATION ${PLUGINDIR})
+#ENDFOREACH(plugin_file)
